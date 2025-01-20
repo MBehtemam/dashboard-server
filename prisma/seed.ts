@@ -2,13 +2,14 @@ import { PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 const db = new PrismaClient();
 
+const userId = faker.number.int({ min: 5, max: 10 });
 const main = async () => {
   const orderData = [...Array(10)].map(() => ({
     id: faker.number.int({ min: 10, max: 170 }),
     total: faker.number.float({ min: 7, max: 15657, precision: 0.01 }),
     createdAt: faker.date.anytime(),
     updatedAt: faker.date.anytime(),
-    userId: 5,
+    userId: userId,
     stripeInvoiceId: faker.string.alphanumeric(15),
   }));
 
@@ -22,7 +23,7 @@ const main = async () => {
 
   await db.user.create({
     data: {
-      id: faker.number.int({ min: 5, max: 10 }),
+      id: userId,
       name: faker.person.fullName(),
       address: faker.location.streetAddress(),
       email: faker.internet.email(),
@@ -50,6 +51,7 @@ const main = async () => {
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
         userId: order.userId,
+        stripeInvoiceId: order.stripeInvoiceId
       },
     });
   });
